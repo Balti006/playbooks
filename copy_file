@@ -1,0 +1,15 @@
+---
+
+- hosts: windows
+
+  tasks:
+
+  - name: Copy File
+
+    win_copy:
+
+      src: C:\SirSuhail.png
+
+      dest: G:\Morpheus\Cert\Engineer\
+
+      remote_src: yes
