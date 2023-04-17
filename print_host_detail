@@ -1,0 +1,7 @@
+---
+- name: Printing hosts details
+  hosts: windows
+  tasks:
+  - name: Printing Details
+    debug:
+      msg: "{{hostvars[ansible_host]}}"
