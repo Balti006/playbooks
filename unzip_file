@@ -1,0 +1,11 @@
+---
+- name: win_unzip module demo
+  hosts: windows
+  vars:
+    mysrc: 'C:\Apache\Maven\apache-maven-3.6.3-bin.zip'
+    mydest: 'C:\Apache\Maven\'
+  tasks:
+    - name: extract archive
+      community.windows.win_unzip:
+        src: "{{ mysrc }}"
+        dest: "{{ mydest }}"
