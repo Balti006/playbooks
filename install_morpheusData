@@ -18,19 +18,19 @@
     - name: Downloading Morpheus Data installer
       get_url:
         url: "https://downloads.morpheusdata.com/files/morpheus-appliance_6.0.2-2_amd64.deb"
-        dest: /home/ansiblecn/MorpheusZip/morpheus
+        dest: /home/ansiblecn/MorpheusZip/morpheus.deb
 
     - name: Install Morpheus package
       shell: "dpkg -i /home/ansiblecn/MorpheusZip/morpheus.deb"
 
     - name: Run morpheus-ctl reconfigure
-      command: "sudo morpheus-ctl reconfigure"
+      shell: "sudo morpheus-ctl reconfigure"
 
     - name: Change appliance URL
       replace:
         path: "/etc/morpheus/morpheus.rb"
-        regexp: "appliance_url=.*"
-        replace: "appliance_url=' {{ custom_appliance_url }}'"
+        regexp: "appliance_url '.*'"
+        replace: "appliance_url '{{ custom_appliance_url }}'"
 
     - name: Run morpheus-ctl reconfigure Again
       shell: "sudo morpheus-ctl reconfigure"
