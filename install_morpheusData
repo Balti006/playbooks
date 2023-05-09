@@ -1,0 +1,42 @@
+---
+- name: Install Morpheus Data
+  hosts: localhost
+  vars:
+    custom_appliance_url: "http://192.168.4.210"
+#    morpheus_license_key: "ABC123"  # change this to your Morpheus license key
+  become_method: sudo
+  become: yes
+  become_user: root
+  tasks:
+    - name: Update apt package list
+      apt:
+        upgrade: yes
+        update_cache: yes
+        cache_valid_time: 86400
+        force_apt_get: true
+
+    - name: Downloading Morpheus Data installer
+      get_url:
+        url: "https://downloads.morpheusdata.com/files/morpheus-appliance_6.0.2-2_amd64.deb"
+        dest: /home/ansiblecn/MorpheusZip/morpheus
+
+    - name: Install Morpheus package
+      shell: "dpkg -i /home/ansiblecn/MorpheusZip/morpheus.deb"
+
+    - name: Run morpheus-ctl reconfigure
+      command: "sudo morpheus-ctl reconfigure"
+
+    - name: Change appliance URL
+      replace:
+        path: "/etc/morpheus/morpheus.rb"
+        regexp: "appliance_url=.*"
+        replace: "appliance_url=' {{ custom_appliance_url }}'"
+
+    - name: Run morpheus-ctl reconfigure Again
+      shell: "sudo morpheus-ctl reconfigure"
+
+    - name: Stoping Morpheus UI
+      shell: "sudo morpheus-ctl stop morpheus-ui"
+
+    - name: Restarting Morpheus UI
+      shell: "sudo morpheus-ctl start morpheus-ui"
