@@ -4,14 +4,26 @@
   gather_facts: False
 
   vars:
-    vm_name: "{{ lookup('env','New-VM') }}"
+    new_hostname: Name-Changed
     ad_domain: uat-cluster.local
     ad_user: Administrator
     ad_password: Login@786
 
   tasks:
-  - name: Set VM Name
-    command: echo "Setting VM name to {{ vm_name }}"
+  - name: Set the new hostname
+    hostname:
+      name: "{{ new_hostname }}"
+    register: hostname_changed
+
+  - name: Update hostname in /etc/hosts
+     lineinfile:        path: /etc/hosts
+      regexp: '^127\.0\.1\.1\s.*'
+      line: '127.0.1.1 {{ new_hostname }}'
+     when: hostname_changed.changed
+
+  - name: Reboot if hostname changed
+     command: "shutdown -r now"
+     when: hostname_changed.changed
   
   - name: Install required packages
     package:
@@ -21,7 +33,7 @@
       state: present
 
   - name: Join the AD domain
-    command: realm join --user={{ ad_user }} {{ ad_domain }} --install=/ -U {{ ad_user }}%{{ ad_password }}
+    command: sudo realm -v join {{ ad_domain}}%{{ ad_password }}
     register: join_result
     ignore_errors: yes
 
