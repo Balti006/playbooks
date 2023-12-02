@@ -5,11 +5,33 @@
 
   vars:
     vm_name: "{{ lookup('env','New-VM') }}"
-    domain_name: "{{ lookup('env','uat-cluster.local') }}"
+    ad_domain: uat-cluster.local
+    ad_user: Administrator
+    ad_password: password
 
   tasks:
   - name: Set VM Name
     command: echo "Setting VM name to {{ vm_name }}"
   
-  - name: Join VM to domain
-    command: echo "Joining {{ vm_name }} to {{ domain_name }}"
+  - name: Install required packages
+    package:
+      name:
+        - realmd
+        - sssd
+      state: present
+
+  - name: Join the AD domain
+    command: realm join --user={{ ad_user }} {{ ad_domain }} --install=/ -U {{ ad_user }}%{{ ad_password }}
+    register: join_result
+    ignore_errors: yes
+
+  - name: Check the AD join result
+    fail:
+      msg: "Unable to join the AD domain, {{ join_result.stderr }}"
+    when: join_result.rc != 0
+
+  - name: Restart SSSD service
+    service:
+      name: sssd
+      state: restarted
+      enabled: yes
