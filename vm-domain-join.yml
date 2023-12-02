@@ -1,0 +1,35 @@
+---
+- name: Join Ubuntu VM to Windows AD
+  hosts: your_ubuntu_vm
+  become: yes
+
+  tasks:
+    - name: Install required packages
+      apt:
+        name: "{{ item }}"
+        state: present
+      with_items:
+        - realmd
+        - sssd
+        - sssd-tools
+        - adcli
+        - krb5-user
+
+    - name: Join the AD domain
+      command: sudo realm -v join uat-cluster.local
+      args:
+        stdin: Login@786
+      # Be cautious with storing passwords in playbooks. You might want to use Ansible Vault to securely manage secrets.
+
+    - name: Configure SSSD
+      template:
+        src: sssd.conf.j2
+        dest: /etc/sssd/sssd.conf
+      notify:
+        - restart sssd
+
+  handlers:
+    - name: restart sssd
+      service:
+        name: sssd
+        state: restarted
