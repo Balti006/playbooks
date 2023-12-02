@@ -1,0 +1,15 @@
+---
+- name: Provision VM and Join to Domain
+  hosts: localhost
+  gather_facts: False
+
+  vars:
+    vm_name: "{{ lookup('env','New-VM') }}"
+    domain_name: "{{ lookup('env','uat-cluster.local') }}"
+
+  tasks:
+  - name: Set VM Name
+    command: echo "Setting VM name to {{ vm_name }}"
+  
+  - name: Join VM to domain
+    command: echo "Joining {{ vm_name }} to {{ domain_name }}"
