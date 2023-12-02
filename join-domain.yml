@@ -16,14 +16,15 @@
     register: hostname_changed
 
   - name: Update hostname in /etc/hosts
-     lineinfile:        path: /etc/hosts
+    lineinfile:        
+      path: /etc/hosts
       regexp: '^127\.0\.1\.1\s.*'
       line: '127.0.1.1 {{ new_hostname }}'
-     when: hostname_changed.changed
+    when: hostname_changed.changed
 
   - name: Reboot if hostname changed
-     command: "shutdown -r now"
-     when: hostname_changed.changed
+    command: "shutdown -r now"
+    when: hostname_changed.changed
   
   - name: Install required packages
     package:
