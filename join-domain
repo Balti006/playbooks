@@ -7,7 +7,7 @@
     vm_name: "{{ lookup('env','New-VM') }}"
     ad_domain: uat-cluster.local
     ad_user: Administrator
-    ad_password: password
+    ad_password: Login@786
 
   tasks:
   - name: Set VM Name
