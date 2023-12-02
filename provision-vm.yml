@@ -1,0 +1,36 @@
+---
+- name: Provision VM on Morpheus Data
+  hosts: localhost
+  gather_facts: False
+
+  vars:
+    vm_name: "{{ lookup('env','My-New-VM') }}"
+    domain_name: "{{ lookup('env','uat-cluster.local') }}"
+
+  tasks:
+  - name: Provision VM
+    uri:
+      url: https://192.168.4.98/api/instances
+      method: POST
+      user: basharat.hussain
+      password: Login@786
+      body_format: json
+      headers:
+        Content-Type: "application/json"
+      body: 
+        {
+          "instance": {
+            "name": "{{ vm_name }}",
+            "site": {
+              "id": 1
+            },
+            "plan": {
+              "id": 1
+            }
+          }
+        }
+    register: vm_details
+
+  - name: Join VM to domain
+    command: sudo realm -v join {{ domain_name }}
+    delegate_to: "{{ vm_details.instance.publicIpAddresses[0] }}"
