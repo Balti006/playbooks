@@ -20,7 +20,7 @@
       become: yes
       become_user: root
       become_method: sudo
-      shell: "echo {{ domain_admin_password }} | realm join --user=Administrator@uat-cluster.local --stdin-password"
+      shell: "echo {{ domain_admin_password }} | realm join --user=Administrator@uat-cluster.local"
       # Be cautious with storing passwords in playbooks. You might want to use Ansible Vault to securely manage secrets.
 
     - name: Configure SSSD
