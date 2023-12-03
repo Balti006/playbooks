@@ -2,9 +2,6 @@
 - name: Provision VM and Join to Domain
   hosts: all
   gather_facts: False
-  become: yes
-  become_user: root
-  become_method: sudo
 
   vars:
     new_hostname: Name-Changed
@@ -29,7 +26,10 @@
       state: present
 
   - name: Join the AD domain
-    shell: "sudo realm -v join {{ ad_domain }}%{{ ad_password }}"
+    become: yes
+    become_user: root
+    become_method: sudo
+    shell: "echo {{ ad_password }} | realm join --user=Administrator@uat-cluster.local --stdin-password"
     register: join_result
     ignore_errors: yes
 
