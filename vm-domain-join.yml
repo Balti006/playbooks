@@ -1,6 +1,6 @@
 ---
 - name: Join Ubuntu VM to Windows AD
-  hosts: New-Uuntu-VM
+  hosts: all
   become: yes
 
   tasks:
