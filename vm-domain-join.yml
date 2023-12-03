@@ -17,7 +17,7 @@
         - krb5-user
 
     - name: Join the AD domain
-      command: sudo realm join uat-cluster.local -U Administrator
+      shell: "sudo realm join -v uat-cluster.local -U Administrator"
       args:
         stdin: Login@786
       # Be cautious with storing passwords in playbooks. You might want to use Ansible Vault to securely manage secrets.
