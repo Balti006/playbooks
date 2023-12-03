@@ -17,8 +17,6 @@
         - krb5-user
 
     - name: Join the AD domain
-      become: yes
-      become_user: root
       command: sudo realm join uat-cluster.local -U Administrator
       args:
         stdin: Login@786
