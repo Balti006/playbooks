@@ -29,7 +29,7 @@
       state: present
 
   - name: Join the AD domain
-    command: realm -v join {{ ad_domain }}%{{ ad_password }}
+    shell: "sudo realm -v join {{ ad_domain }}%{{ ad_password }}"
     register: join_result
     ignore_errors: yes
 
