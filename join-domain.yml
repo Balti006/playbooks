@@ -1,7 +1,10 @@
 ---
 - name: Provision VM and Join to Domain
-  hosts: localhost
+  hosts: all
   gather_facts: False
+  become: yes
+  become_user: root
+  become_method: sudo
 
   vars:
     new_hostname: Name-Changed
