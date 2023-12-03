@@ -29,7 +29,7 @@
     become: yes
     become_user: root
     become_method: sudo
-    shell: "echo {{ ad_password }} | realm join --user=Administrator@uat-cluster.local --stdin-password"
+    shell: "echo {{ ad_password }} | realm join --user=Administrator@uat-cluster.local"
     register: join_result
     ignore_errors: yes
 
