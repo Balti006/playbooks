@@ -1,10 +1,9 @@
 ---
 - name: Join Ubuntu VM to Windows AD
   hosts: all
-  become: yes
-  become_user: root
-  become_method: sudo
-
+  vars:
+    domain_admin_password: Login@786
+  
   tasks:
     - name: Install required packages
       apt:
@@ -18,9 +17,10 @@
         - krb5-user
 
     - name: Join the AD domain
-      shell: "sudo realm join -v uat-cluster.local -U Administrator"
-      args:
-        stdin: Login@786
+      become: yes
+      become_user: root
+      become_method: sudo
+      shell: "echo {{ domain_admin_password }} | realm join --user=Administrator@uat-cluster.local --stdin-password"
       # Be cautious with storing passwords in playbooks. You might want to use Ansible Vault to securely manage secrets.
 
     - name: Configure SSSD
