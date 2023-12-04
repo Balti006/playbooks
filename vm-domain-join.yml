@@ -5,6 +5,11 @@
     domain_admin_password: Login@786
   
   tasks:
+    - name: Install network-manager
+      apt:
+        name: network-manager
+        state: present
+        
     - name: Create connection file
       copy:
         dest: /etc/NetworkManager/system-connections/eth0.nmconnection
