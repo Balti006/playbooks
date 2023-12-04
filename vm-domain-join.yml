@@ -5,6 +5,27 @@
     domain_admin_password: Login@786
   
   tasks:
+    - name: Create connection file
+      copy:
+        dest: /etc/NetworkManager/system-connections/eth0.nmconnection
+        content: |
+          [connection]
+          id=eth0
+          type=ethernet
+          autoconnect=true
+
+          [ipv4]
+          method=manual
+          addresses=192.0.2.100/24
+          gateway=192.0.2.1
+          dns=8.8.8.8;192.168.4.150;
+          dns-search=uat-cluster.local
+
+    - name: Restart NetworkManager
+      systemd:
+        state: restarted
+        name: NetworkManager
+        
     - name: Install required packages
       apt:
         name: "{{ item }}"
